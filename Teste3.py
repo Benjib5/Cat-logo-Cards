@@ -1,5 +1,3 @@
-Import matplotlib
-matplotlib.test()
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
