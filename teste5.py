@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import pandas
+arquivo_excel = pandas.read_excel('Pasta de Yugioh.xlsx')
+arquivo_excel
 
 chart_data = pd.DataFrame(
    {
