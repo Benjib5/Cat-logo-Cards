@@ -5,8 +5,8 @@ import numpy as np
 
 chart_data = pd.DataFrame(
    {
-       "col1": np."Nome",
-       "col5": np."Preço",
+       "line1,2,3": np."Mago Negro",
+       "line4,5,6": np."Dragão Negro de Olhos Vermelhos",
    }
 )
 
