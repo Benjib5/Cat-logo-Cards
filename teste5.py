@@ -6,7 +6,7 @@ import csv
 chart_data = pd.DataFrame(np.columns=["col1", "col2", "col3"])
       col1 = Pasta de Yugioh - Página1.csv['Raridade']
       col2 = Pasta de Yugioh - Página1.csv['Preço']
-chart_data['col4'] = np.([A='Magro Negro',B='Dragão Negro de Olhos Vermelhos',C='Exodia,"O Proibido"'])
+chart_data['col4'] = np.(['Magro Negro','Dragão Negro de Olhos Vermelhos','Exodia,"O Proibido"'])
 
 st.scatter_chart(
     chart_data,
