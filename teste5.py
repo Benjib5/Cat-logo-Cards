@@ -11,3 +11,4 @@ st.scatter_chart(
     x='Raridade',
     y='Preço',
     size='Carta'
+)
