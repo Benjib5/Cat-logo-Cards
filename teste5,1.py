@@ -6,7 +6,7 @@ import numpy as np
 chart_data = pd.DataFrame(
    {
        "col1": np."Nome",
-       "col5": np."Preço,
+       "col5": np."Preço",
    }
 )
 
