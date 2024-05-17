@@ -3,9 +3,9 @@ import streamlit as st
 import csv
 from matplotlib import pyplot as plt
 
-st.title("Students information")
+st.title("Card Price")
 
-stw = pd.read_csv("student_weight.csv")
+stw = pd.read_csv("Pasta de Yugioh - Página1.csv")
 
 stw_chart = plt.gca()
 st.line_chart(stw_chart,str, x=stw.Height, y=stw.Height, width=500, height=500, use_container_width=True)
