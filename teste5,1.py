@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import csv
+requirements.txt
+metplotlib
 
 df=pd.read_csv('Pasta de Yugioh - Página1 (1).csv')
 
