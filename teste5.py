@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Carregar os dados do arquivo CSV
-file_path = "Pasta de Yugioh - Página1.csv"
-data = pd.read_csv(file_path)
+# Carregar o arquivo CSV
+df = pd.read_csv('Pasta de Yugioh - Página1 (1).csv')
 
-# Exibir gráfico de dispersão
-st.scatter_chart(
-    data=data,
-    x='Raridade',
-    y='Preço',
-    size='Carta'
-)
+# Criar a figura e o eixo
+fig, ax = plt.subplots()
+
+# Plotar os dados no eixo
+df.plot(kind='line', x='Nome:', y='Preço:', ax=ax, title='Gráfico de linhas do preço das cartas')
+
+# Mostrar o gráfico no Streamlit
+st.pyplot(fig)
