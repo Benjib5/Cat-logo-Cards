@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import csv
 
-chart_data = pd.DataFrame(columns=["col1", "col5"])
+df=pd.read_csv('Pasta de Yugioh - Página1 (1).csv')
 
-st.line_chart(
-   chart_data, x="col1", y=["col2"], color=["#FF0000", "#0000FF"]
-)
+df.plot(kind='line', x='Nome:', y='Preço:', title='Gráfico de linhas do preço das cartas')
+
+df
