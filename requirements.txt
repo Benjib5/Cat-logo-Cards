@@ -1,1 +1,8 @@
 matplotlib
+wordcloud
+streamlit
+requests
+numpy
+beautifulsoup4
+networkx
+st-gsheets-connection
