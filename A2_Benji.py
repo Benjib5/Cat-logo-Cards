@@ -109,4 +109,3 @@ elif pesquisa == 'Pokémon':
     if st.button('Pesquisar'):
         url_pokemon = 'https://api.pokemontcg.io/v2/cards'
         pesquisa_arquivo(url_pokemon, pesquisa2, extrair_dados_pokemon)
-streamlit run A2_Benji.py
