@@ -28,7 +28,7 @@ def extrair_dados_yugioh(api_url, termo_de_busca):
                 tipo = None
 
             try:
-                raridade = card['set_rarity']
+                raridade = card['card_sets'][0]['set_rarity']
             except KeyError:
                 raridade = None
 
