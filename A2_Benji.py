@@ -43,7 +43,7 @@ def extrair_dados_yugioh(api_url, termo_de_busca):
                 'Raridade': raridade,
                 'Preço': preco
             })
-            st.write(f'Nome: {nome} // Tipo: {tipo} // Raridade: {raridade} // Preço: {preco}')
+            # st.write(f'Nome: {nome} // Tipo: {tipo} // Raridade: {raridade} // Preço: {preco}')
     return dados
 
 def extrair_dados_pokemon(api_url, termo_de_busca):
