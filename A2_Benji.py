@@ -81,7 +81,7 @@ def extrair_dados_pokemon(api_url, termo_de_busca):
                 'Raridade': raridade,
                 'Preço': preco
             })
-            st.write(f'Nome: {nome} // Raridade: {raridade} // Preço: {preco}')
+            # st.write(f'Nome: {nome} // Raridade: {raridade} // Preço: {preco}')
     return dados
 
 def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
