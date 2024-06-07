@@ -108,6 +108,7 @@ def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
         # Exibir gráfico de barras para os preços
         if 'Preço' in df.columns:
             plt.figure(figsize=(10, 6))
+            st.write('test')
             df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce') # Convertendo para números
             df.dropna(subset=['Preço'], inplace=True) # Removendo valores nulos
             df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
