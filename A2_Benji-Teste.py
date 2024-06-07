@@ -2,16 +2,106 @@ import streamlit as st
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
-import plotly.express as px
 
 def extrair_dados_yugioh(api_url, termo_de_busca):
-    # Código de extração de dados
+    response = requests.get(api_url)
+    if response.status_code != 200:
+        st.write(f"Falha ao acessar a API. Status code: {response.status_code}")
+        return []
+
+    data = response.json()
+
+    if 'data' not in data:
+        st.write("Chave 'data' não encontrada no JSON.")
+        return []
+
+    dados = []
+    for card in data['data']:
+        if termo_de_busca.lower() in card['name'].lower():
+            try:
+                nome = card['name']
+            except KeyError:
+                nome = None
+
+            try:
+                tipo = card['type']
+            except KeyError:
+                tipo = None
+
+            try:
+                raridade = card['card_sets'][0]['set_rarity']
+            except KeyError:
+                raridade = None
+
+            try:
+                preco = card['card_prices'][0]['cardmarket_price']
+            except (KeyError, IndexError):
+                preco = None
+
+            dados.append({
+                'Nome': nome,
+                'Tipo': tipo,
+                'Raridade': raridade,
+                'Preço': preco
+            })
+    return dados
 
 def extrair_dados_pokemon(api_url, termo_de_busca):
-    # Código de extração de dados
+    response = requests.get(api_url)
+    if response.status_code != 200:
+        st.write(f"Falha ao acessar a API. Status code: {response.status_code}")
+        return []
+
+    data = response.json()
+
+    if 'data' not in data:
+        st.write("Chave 'data' não encontrada no JSON.")
+        return []
+
+    dados = []
+    for card in data['data']:
+        if termo_de_busca.lower() in card['name'].lower():
+            try:
+                nome = card['name']
+            except KeyError:
+                nome = None
+
+            try:
+                raridade = card['rarity']
+            except KeyError:
+                raridade = None
+
+            try:
+                preco = card['cardmarket']['prices']['averageSellPrice'] if 'cardmarket' in card and 'prices' in card['cardmarket'] else None
+            except KeyError:
+                preco = None
+
+            dados.append({
+                'Nome': nome,
+                'Raridade': raridade,
+                'Preço': preco
+            })
+    return dados
 
 def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
-    # Código de pesquisa
+    dados = extrair_dados_func(api_url, termo_de_busca)
+    if not dados:
+        st.write("Nenhum dado encontrado para o termo de busca.")
+    else:
+        df = pd.DataFrame(dados)
+        st.write(df)
+
+        # Exibir gráfico de barras para os preços
+        if 'Preço' in df.columns:
+            plt.figure(figsize=(10, 6))
+            df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce') # Convertendo para números
+            df.dropna(subset=['Preço'], inplace=True) # Removendo valores nulos
+            df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
+            plt.title('Preços das Cartas')
+            plt.xlabel('Cartas')
+            plt.ylabel('Preço')
+            plt.xticks(rotation=45, ha='right')
+            st.pyplot(plt)
 
 st.title('Pesquisa de Cartas')
 pesquisa = st.selectbox('Qual o Jogo?', ['Yu-Gi-Oh!', 'Pokémon'])
@@ -19,25 +109,10 @@ pesquisa = st.selectbox('Qual o Jogo?', ['Yu-Gi-Oh!', 'Pokémon'])
 if pesquisa == 'Yu-Gi-Oh!':
     pesquisa1 = st.text_input('Pesquisa:')
     url_yugioh = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
-    dados = extrair_dados_yugioh(url_yugioh, pesquisa1)
-    if dados:
-        df = pd.DataFrame(dados)
-        st.write(df)
-        # Exemplo de gráfico de linha com Matplotlib
-        fig, ax = plt.subplots()
-        ax.plot(df['Nome'], df['Preço'])
-        ax.set_xlabel('Nome')
-        ax.set_ylabel('Preço')
-        st.pyplot(fig)
+    pesquisa_arquivo(url_yugioh, pesquisa1, extrair_dados_yugioh)
 elif pesquisa == 'Pokémon':
     pesquisa2 = st.text_input('Pesquisa:')
     url_pokemon = 'https://api.pokemontcg.io/v2/cards'
-    dados = extrair_dados_pokemon(url_pokemon, pesquisa2)
-    if dados:
-        df = pd.DataFrame(dados)
-        st.write(df)
-        # Exemplo de gráfico de linha com Plotly
-        fig = px.line(df, x='Nome', y='Preço', title='Preço das Cartas Pokémon')
-        st.plotly_chart(fig)
+    pesquisa_arquivo(url_pokemon, pesquisa2, extrair_dados_pokemon)
 else:
     st.write("Opção inválida.")
