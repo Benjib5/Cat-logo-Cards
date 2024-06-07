@@ -6,3 +6,4 @@ numpy
 beautifulsoup4
 networkx
 st-gsheets-connection
+markdown
