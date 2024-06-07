@@ -3,6 +3,20 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Adicionando o código para definir a imagem de fundo
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: url('https://github.com/Benjib5/Cat-logo-Cards/blob/main/Wallpaper.jpg?raw=true') no-repeat center center fixed;
+        background-size: cover;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Funções de extração de dados
 def extrair_dados_yugioh(api_url, termo_de_busca):
     response = requests.get(api_url)
     if response.status_code != 200:
@@ -103,6 +117,7 @@ def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
             plt.xticks(rotation=45, ha='right')
             st.pyplot(plt)
 
+# Interface principal
 st.title('Pesquisa de Cartas')
 pesquisa = st.selectbox('Qual o Jogo?', ['Yu-Gi-Oh!', 'Pokémon'])
 
