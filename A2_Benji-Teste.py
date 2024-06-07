@@ -91,12 +91,12 @@ def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
         df = pd.DataFrame(dados)
         st.write(df)
 
-        # Exibir gráfico de barras para os preços
+        # Exibir gráfico de linhas para os preços
         if 'Preço' in df.columns:
             plt.figure(figsize=(10, 6))
             df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce') # Convertendo para números
             df.dropna(subset=['Preço'], inplace=True) # Removendo valores nulos
-            df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
+            df.plot(kind='line', x='Nome', y='Preço', marker='o', color='green')
             plt.title('Preços das Cartas')
             plt.xlabel('Cartas')
             plt.ylabel('Preço')
