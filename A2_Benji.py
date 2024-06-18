@@ -3,19 +3,6 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Adicionando o código para definir a imagem de fundo
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background: url('') no-repeat center center fixed;
-        background-size: cover;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Funções de extração de dados
 def extrair_dados_yugioh(api_url):
     response = requests.get(api_url)
