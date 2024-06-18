@@ -1,17 +1,32 @@
+import streamlit as st
 import requests
 import pandas as pd
-import streamlit as st
+import matplotlib.pyplot as plt
 
+# Adicionando o código para definir a imagem de fundo
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: url('https://github.com/Benjib5/Cat-logo-Cards/blob/main/Wallpaper.jpg?raw=true') no-repeat center center fixed;
+        background-size: cover;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Funções de extração de dados
 def extrair_dados_yugioh(api_url, termo_de_busca):
     response = requests.get(api_url)
     if response.status_code != 200:
-        st.error(f"Falha ao acessar a API. Status code: {response.status_code}")
+        st.write(f"Falha ao acessar a API. Status code: {response.status_code}")
         return []
 
     data = response.json()
 
     if 'data' not in data:
-        st.error("Chave 'data' não encontrada no JSON.")
+        st.write("Chave 'data' não encontrada no JSON.")
         return []
 
     dados = []
@@ -43,19 +58,18 @@ def extrair_dados_yugioh(api_url, termo_de_busca):
                 'Raridade': raridade,
                 'Preço': preco
             })
-            # st.write(f'Nome: {nome} // Tipo: {tipo} // Raridade: {raridade} // Preço: {preco}')
     return dados
 
 def extrair_dados_pokemon(api_url, termo_de_busca):
     response = requests.get(api_url)
     if response.status_code != 200:
-        st.error(f"Falha ao acessar a API. Status code: {response.status_code}")
+        st.write(f"Falha ao acessar a API. Status code: {response.status_code}")
         return []
 
     data = response.json()
 
     if 'data' not in data:
-        st.error("Chave 'data' não encontrada no JSON.")
+        st.write("Chave 'data' não encontrada no JSON.")
         return []
 
     dados = []
@@ -81,31 +95,44 @@ def extrair_dados_pokemon(api_url, termo_de_busca):
                 'Raridade': raridade,
                 'Preço': preco
             })
-            # st.write(f'Nome: {nome} // Raridade: {raridade} // Preço: {preco}')
     return dados
 
 def pesquisa_arquivo(api_url, termo_de_busca, extrair_dados_func):
     dados = extrair_dados_func(api_url, termo_de_busca)
     if not dados:
-        st.warning("Nenhum dado encontrado para o termo de busca.")
+        st.write("Nenhum dado encontrado para o termo de busca.")
     else:
+        for carta in dados:
+            if st.button(carta['Nome']):
+                st.write(f"**Nome:** {carta['Nome']}")
+                st.write(f"**Tipo:** {carta.get('Tipo', 'N/A')}")
+                st.write(f"**Raridade:** {carta['Raridade']}")
+                st.write(f"**Preço:** {carta['Preço']}")
+
+        # Exibir gráfico de barras para os preços
         df = pd.DataFrame(dados)
-        df.to_csv('cards.csv', index=False)
-        st.dataframe(df)
+        if 'Preço' in df.columns:
+            plt.figure(figsize=(10, 6))
+            df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce')  # Convertendo para números
+            df.dropna(subset=['Preço'], inplace=True)  # Removendo valores nulos
+            df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
+            plt.title('Preços das Cartas')
+            plt.xlabel('Cartas')
+            plt.ylabel('Preço')
+            plt.xticks(rotation=45, ha='right')
+            st.pyplot(plt)
 
-st.title('Pesquisa de Cartas de TCG')
-
+# Interface principal
+st.title('Pesquisa de Cartas')
 pesquisa = st.selectbox('Qual o Jogo?', ['Yu-Gi-Oh!', 'Pokémon'])
 
 if pesquisa == 'Yu-Gi-Oh!':
-    st.subheader('Yu-Gi-Oh!')
     pesquisa1 = st.text_input('Pesquisa:')
-    if st.button('Pesquisar'):
-        url_yugioh = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
-        pesquisa_arquivo(url_yugioh, pesquisa1, extrair_dados_yugioh)
+    url_yugioh = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
+    pesquisa_arquivo(url_yugioh, pesquisa1, extrair_dados_yugioh)
 elif pesquisa == 'Pokémon':
-    st.subheader('Pokémon')
     pesquisa2 = st.text_input('Pesquisa:')
-    if st.button('Pesquisar'):
-        url_pokemon = 'https://api.pokemontcg.io/v2/cards'
-        pesquisa_arquivo(url_pokemon, pesquisa2, extrair_dados_pokemon)
+    url_pokemon = 'https://api.pokemontcg.io/v2/cards'
+    pesquisa_arquivo(url_pokemon, pesquisa2, extrair_dados_pokemon)
+else:
+    st.write("Opção inválida.")
