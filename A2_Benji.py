@@ -8,7 +8,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: url('https://github.com/Benjib5/Cat-logo-Cards/blob/main/Wallpaper.jpg?raw=true') no-repeat center center fixed;
+        background: url('') no-repeat center center fixed;
         background-size: cover;
     }
     </style>
@@ -95,32 +95,28 @@ def extrair_dados_pokemon(api_url):
         })
     return dados
 
-def pesquisa_arquivo(dados, termo_de_busca):
-    if termo_de_busca:
-        dados = [carta for carta in dados if termo_de_busca.lower() in carta['Nome'].lower()]
-    if not dados:
-        st.write("Nenhum dado encontrado para o termo de busca.")
-    else:
-        for carta in dados:
-            if st.button(carta['Nome']):
-                st.write(f"**Nome:** {carta['Nome']}")
-                st.write(f"**Tipo:** {carta.get('Tipo', 'N/A')}")
-                st.write(f"**Raridade:** {carta['Raridade']}")
-                st.write(f"**Preço:** {carta['Preço']}")
+def exibir_cartas(dados):
+    for carta in dados:
+        if st.button(carta['Nome']):
+            st.write(f"**Nome:** {carta['Nome']}")
+            st.write(f"**Tipo:** {carta.get('Tipo', 'N/A')}")
+            st.write(f"**Raridade:** {carta['Raridade']}")
+            st.write(f"**Preço:** {carta['Preço']}")
 
-        # Exibir gráfico de barras para os preços
-        df = pd.DataFrame(dados)
-        if 'Preço' in df.columns:
-            plt.figure(figsize=(10, 6))
-            df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce')  # Convertendo para números
-            df.dropna(subset=['Preço'], inplace=True)  # Removendo valores nulos
-            if not df.empty:
-                df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
-                plt.title('Preços das Cartas')
-                plt.xlabel('Cartas')
-                plt.ylabel('Preço')
-                plt.xticks(rotation=45, ha='right')
-                st.pyplot(plt)
+def exibir_grafico(dados):
+    # Exibir gráfico de barras para os preços
+    df = pd.DataFrame(dados)
+    if 'Preço' in df.columns:
+        plt.figure(figsize=(10, 6))
+        df['Preço'] = pd.to_numeric(df['Preço'], errors='coerce')  # Convertendo para números
+        df.dropna(subset=['Preço'], inplace=True)  # Removendo valores nulos
+        if not df.empty:
+            df.plot(kind='bar', x='Nome', y='Preço', color='skyblue')
+            plt.title('Preços das Cartas')
+            plt.xlabel('Cartas')
+            plt.ylabel('Preço')
+            plt.xticks(rotation=45, ha='right')
+            st.pyplot(plt)
 
 # Interface principal
 st.title('Pesquisa de Cartas')
@@ -130,11 +126,19 @@ if pesquisa == 'Yu-Gi-Oh!':
     url_yugioh = 'https://db.ygoprodeck.com/api/v7/cardinfo.php'
     dados_yugioh = extrair_dados_yugioh(url_yugioh)
     pesquisa1 = st.text_input('Pesquisa:')
-    pesquisa_arquivo(dados_yugioh, pesquisa1)
+    if pesquisa1:
+        dados_yugioh = [carta for carta in dados_yugioh if pesquisa1.lower() in carta['Nome'].lower()]
+    exibir_cartas(dados_yugioh)
+    if pesquisa1:
+        exibir_grafico(dados_yugioh)
 elif pesquisa == 'Pokémon':
     url_pokemon = 'https://api.pokemontcg.io/v2/cards'
     dados_pokemon = extrair_dados_pokemon(url_pokemon)
     pesquisa2 = st.text_input('Pesquisa:')
-    pesquisa_arquivo(dados_pokemon, pesquisa2)
+    if pesquisa2:
+        dados_pokemon = [carta for carta in dados_pokemon if pesquisa2.lower() in carta['Nome'].lower()]
+    exibir_cartas(dados_pokemon)
+    if pesquisa2:
+        exibir_grafico(dados_pokemon)
 else:
     st.write("Opção inválida.")
