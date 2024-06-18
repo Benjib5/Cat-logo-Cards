@@ -3,6 +3,19 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Adicionando o código para definir a imagem de fundo
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: url('https://github.com/Benjib5/Cat-logo-Cards/blob/main/Wallpaper.jpg?raw=true') no-repeat center center fixed;
+        background-size: cover;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Funções de extração de dados
 def extrair_dados_yugioh(api_url):
     response = requests.get(api_url)
@@ -83,8 +96,8 @@ def extrair_dados_pokemon(api_url):
     return dados
 
 def exibir_cartas(dados):
-    for carta in dados:
-        if st.button(carta['Nome']):
+    for i, carta in enumerate(dados):
+        if st.button(carta['Nome'], key=f"{carta['Nome']}-{i}"):
             st.write(f"**Nome:** {carta['Nome']}")
             st.write(f"**Tipo:** {carta.get('Tipo', 'N/A')}")
             st.write(f"**Raridade:** {carta['Raridade']}")
